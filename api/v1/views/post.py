@@ -115,3 +115,25 @@ def delete_post(id, post_id):
         db.session.delete(post)
         db.session.commit()
     return make_response(jsonify({'deleted': True}), 200)
+
+
+@app_views.route('/post/<id>/<post_id>', methods=['GET'], strict_slashes=False)
+def get_post(id, post_id):
+    user = get_current_user()
+    if user.id != id:
+        abort(401)
+    with app.app_context():
+        post = db.one_or_404(Post, post_id)
+        all_comments = post.comments
+        comments = [
+                    {
+                        'message': c.message, 
+                        'comment_date': c.comment_date,
+                        'commenter_id': c.commenter_id, 
+                        'post_id': c.post_id} for c in all_comments]
+
+    return make_response(jsonify({'title': post.title,
+                                  'body': post.body,
+                                  'author': post.author,
+                                  'comments': comments,
+                                  'publication_date': post.publication_date}), 200)

@@ -9,6 +9,7 @@ if __name__ == '__main__':
     try:
         with app.app_context():
             db.create_all()
+        exit(0)
     except Exception as e:
         print(e)
         exit(1)

@@ -108,3 +108,14 @@ def delete_user(id):
         db.session.delete(user)
         db.session.commit()
     return make_response(jsonify({'deleted': True}), 200)
+
+
+@app_views.route('/user/me', methods=['GET'], strict_slashes=False)
+@jwt_required()
+def get_me():
+    user = get_current_user()
+    return make_response(jsonify({'first_name': user.first_name,
+                                  'last_name': user.last_name,
+                                  'username': user.username,
+                                  'email': user.email,
+                                  'phone': user.phone}), 200)
