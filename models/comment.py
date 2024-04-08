@@ -18,3 +18,4 @@ class Comment(BaseModel, db.Model):
     comment_date: Mapped[str] = mapped_column(String(60),
                                                   default=str(datetime.utcnow()), onupdate=str(datetime.utcnow()))
     post = relationship('Post', back_populates='comments')
+    commenter_id: Mapped[str] = mapped_column(String(60), nullable=False)

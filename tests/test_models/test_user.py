@@ -1,8 +1,7 @@
+#!/usr/bin/env python3
 import unittest
 from models.user import User
-from models.post import Post
 from models.basemodel import db, app
-from time import sleep
 
 
 class TestUser(unittest.TestCase):

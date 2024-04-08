@@ -1,21 +1,22 @@
+#!/usr/bin/env python3
 import unittest
 from models.user import User
 from models.post import Post
 from models.comment import Comment
 from models.basemodel import db, app
 from datetime import datetime
-from time import sleep
+from uuid import uuid4
 
 
-class TestUser(unittest.TestCase):
+class TestComment(unittest.TestCase):
     @classmethod
     def setUpClass(cls):
         cls.first_name = 'abebe'
         cls.last_name = 'kebede'
-        cls.username = 'abekebe123'
-        cls.email = 'kebede@abebe.com'
+        cls.username = 'abekebe1234'
+        cls.email = 'kebe@abebe.com'
         cls.password = '123pwd'
-        phone = '0987452314'
+        phone = '0987542314'
         cls.user = User(first_name=cls.first_name, last_name=cls.last_name,
                         username=cls.username, email=cls.email, password=cls.password, phone=phone)
         with app.app_context():
@@ -35,7 +36,7 @@ class TestUser(unittest.TestCase):
         with app.app_context():
             db.session.add(cls.user)
             db.session.add(cls.post)
-            cls.comment = Comment(message=cls.message, user_id=cls.user.id, post_id=cls.post.id)
+            cls.comment = Comment(message=cls.message, user_id=cls.user.id, post_id=cls.post.id, commenter_id=str(uuid4()))
             db.session.add(cls.comment)
             db.session.commit()
         
@@ -98,3 +99,16 @@ class TestUser(unittest.TestCase):
             updated_at = datetime.strptime(self.comment.updated_at, time)
             self.assertTrue(type(updated_at) is datetime)
             self.assertTrue(updated_at > created_at)
+
+    def test_comment_user(self):
+        '''
+            checks if user contain the comment
+        '''
+        with app.app_context():
+            db.session.add(self.user)
+            db.session.add(self.post)
+            db.session.add(self.comment)
+            comment = self.user.posts[0].comments[0]
+            self.assertEqual(comment.id, self.comment.id)
+            self.assertEqual(comment.user_id, self.user.id)
+            self.assertEqual(comment.post_id, self.post.id)
