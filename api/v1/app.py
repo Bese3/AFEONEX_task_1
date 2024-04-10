@@ -23,7 +23,38 @@ def error_404(err):
     returns a response with a JSON object with an error message
     for a 404 Not Found status code.
     """
-    return make_response(jsonify({'error': 'Not found'}), 404)
+    return make_response(jsonify({'message': str(err)}), 404)
+
+
+@app.errorhandler(401)
+def error_401(err):
+    """
+    returns a response with a JSON object with an error message.
+    """
+    return make_response(jsonify({'message': str(err)}), 401)
+
+
+@app.errorhandler(400)
+def error_400(err):
+    """
+    returns a response with a JSON object with an error message.
+    """
+    return make_response(jsonify({'message': str(err)}), 400)
+
+@app.errorhandler(422)
+def error_422(err):
+    """
+    returns a response with a JSON object with an error message.
+    """
+    return make_response(jsonify({'message': str(err)}), 422)
+
+@app.errorhandler(415)
+def error_415(err):
+    """
+    returns a response with a JSON object with an error message.
+    """
+    return make_response(jsonify({'message': str(err)}), 415)
+
 
 
 if __name__ == '__main__':

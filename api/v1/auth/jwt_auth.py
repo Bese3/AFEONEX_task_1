@@ -35,14 +35,19 @@ def user_lookup_callback(jwt_header, jwt_data):
     identity = jwt_data['id']
     return User.query.filter_by(id=identity).first()
 
+@app_views.route('/status', methods=['GET'], strict_slashes=False)
+def status():
+    redis_client = redis.Redis(host='localhost', port=6379, db=0)
+    return make_response(jsonify({'message': redis_client.ping()}), 200)
 
 
-@app_views.route('/login', methods=['POST'], strict_slashes=False)
+
+@app_views.route('/auth/login', methods=['POST'], strict_slashes=False)
 def login():
     username = request.json.get('username', None)
     password = request.json.get('password', None)
     if username is None or password is None:
-        abort(404)
+        abort(401)
     with app.app_context():
         user = db.one_or_404(db.select(User).filter_by(username=username))
     if not PwdHasher.pwd_check(password, user.password):

@@ -21,19 +21,23 @@ def create_user():
     returns user information along with an access token.
     """
     if not request.json:
-        abort(404)
+        abort(401)
     allowed_fields = ['first_name', 'last_name', 'username', 'email', 'password', 'phone']
     for field in allowed_fields:
         if field not in request.json:
-            abort(404)
+            abort(400)
     data = request.get_json()
     data['password'] = PwdHasher.pwd_hash(data['password'])
-    user = User(**data)
-    if user is None:
-        abort(404)
+    try:
+        user = User(**data)
+    except Exception as e:
+        abort(400)
     with app.app_context():
-        db.session.add(user)
-        db.session.commit()
+        try:
+            db.session.add(user)
+            db.session.commit()
+        except Exception as e:
+            abort(400)
         user = db.get_or_404(User, user.id)
     # redaction needed for email and password
     # and email verification needed
@@ -58,11 +62,11 @@ def update_user(id):
     if current_user.id != id:
         abort(401)
     if not request.json:
-        abort(404)
+        abort(400)
     allowed_fields = ['first_name', 'last_name', 'username', 'email', 'password', 'phone']
     for field in request.json:
         if field not in allowed_fields:
-            abort(404)
+            abort(400)
     data = request.get_json()
     with app.app_context():
         user = db.get_or_404(User, id)
@@ -76,7 +80,7 @@ def update_user(id):
         if 'email' in data:
             user.email = data['email']
         if 'password' in data:
-            user.password = data['password']
+            user.password = PwdHasher.pwd_hash(data['password'])
         if 'phone' in data:
             user.phone = data['phone']
         db.session.commit()
@@ -99,10 +103,6 @@ def delete_user(id):
     current_user = get_current_user()
     if current_user.id != id:
         abort(401)
-    if not request.json:
-        abort(404)
-    if not id:
-        abort(404)
     with app.app_context():
         user = db.get_or_404(User, id)
         db.session.delete(user)
@@ -113,7 +113,10 @@ def delete_user(id):
 @app_views.route('/user/me', methods=['GET'], strict_slashes=False)
 @jwt_required()
 def get_me():
-    user = get_current_user()
+    try:
+        user = get_current_user()
+    except Exception as e:
+        return make_response(jsonify({'error': e}))
     return make_response(jsonify({'first_name': user.first_name,
                                   'last_name': user.last_name,
                                   'username': user.username,

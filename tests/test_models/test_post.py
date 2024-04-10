@@ -11,7 +11,7 @@ class TestPost(unittest.TestCase):
     def setUpClass(cls):
         cls.first_name = 'abebe'
         cls.last_name = 'kebede'
-        cls.username = 'abekebe123'
+        cls.username = 'test_username_post'
         cls.email = 'kebede@abebe.com'
         cls.password = '123pwd'
         phone = '0987452314'

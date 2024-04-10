@@ -9,8 +9,8 @@ class TestUser(unittest.TestCase):
     def setUpClass(cls):
         cls.first_name = 'abebe'
         cls.last_name = 'kebede'
-        cls.username = 'abekebe'
-        cls.email = 'abebe@kebede.com'
+        cls.username = 'test_username_user'
+        cls.email = 'abebe@kebede1.com'
         cls.password = '123pwd'
         phone = '0987452134'
         cls.user = User(first_name=cls.first_name, last_name=cls.last_name,
