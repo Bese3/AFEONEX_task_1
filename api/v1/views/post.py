@@ -108,10 +108,6 @@ def delete_post(id, post_id):
     current_user = get_current_user()
     if current_user.id != id:
         abort(401)
-    if not request.json:
-        abort(404)
-    if not id:
-        abort(404)
     with app.app_context():
         post = db.get_or_404(Post, post_id)
         if current_user.id != post.user_id:
