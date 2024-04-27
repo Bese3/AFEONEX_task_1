@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>TwittBuzz</title>
+  <link rel="stylesheet" href="../static/css/style.css">
+  <link rel="stylesheet" href="../static/css/all.css">
+</head>
+<body>
+  <div class="main-flex-container">
+  <div class="left-flex-container flex-item">
+    <div class="nav-links">
+      <ul>
+        <li class="nav-items logo"><a href="#"><i class="fab">TwittBuzz</i></a></li>
+        <li class="nav-items current-page"><a href="#"><i class="fas fa-home"></i> Home</a></li>
+        <li class="nav-items"><a href="#"><i class="far fa-bell"></i> Notifications</a></li>
+        <!-- <li class="nav-items"><a href="#"><i class="far fa-envelope"></i> Messages</a></li> -->
+        <li class="nav-items"><a href="#"><i class="far fa-user"></i> Profile</a></li>
+      </ul>
+    </div>
+    <div class="tweet"><a href="#">Post</a></div>
+    <div class="profile-box">
+      <!-- <img src="./img/profile.jpg" alt="profile"> -->
+      <div class="profile-link">
+        {% if user %}
+        <p class="full-name"> {{ user.first_name }}  {{ user.last_name }} </p>
+        <p class="user-name">@{{ user.username }} </p>
+        <p class="full-name"><a href="/" class="logout">Logout</a></p>
+        {% else %}
+        <p class="full-name"><a href="/auth/login" class="login">Login</a></p>
+      {% endif %}
+      </div>
+      <div class="options-icon"><i class="fas fa-caret-down"></i></div>
+    </div>
+  </div>
+    
+
+    <div class="center-flex-container flex-item">
+      <div class="home">
+        <h1>Home</h1>
+        <i class="fas fa-magic"></i>
+      </div>
+
+      <div class="post-tweet">
+        <form action="">
+          <div class="form-group-1">
+            <input type="text" placeholder="What's happening?">
+          </div>
+          <div class="form-group-2">
+            <div class="post-icons">
+              <!-- <i class="far fa-image"></i>
+              <i class="far fa-file-image"></i>
+              <i class="fas fa-stream"></i>
+              <i class="far fa-smile"></i>
+              <i class="far fa-calendar-check"></i> -->
+            </div>
+            <button class="btn" type="submit">Post</button>
+          </div>
+        </form>
+
+      </div>
+      <!-- User Content -->
+      {% for post in all_posts %}
+        <div class="tweets" id="{{ post.id }}", user-id="{{ post.user_id }}">
+          <div class="user-pics"></div>
+          <div class="user-content-box">
+            <div class="user-names">
+              <hi class="full-name"> {{ post.author }} </hi>
+              <p class="user-name">@{{ post.username }} </p>
+              <p class="time"> {{ post.publication_date }} </p>
+            </div>
+            
+            <div class="user-content">
+              <p> {{ post.body | truncate(100) }} </p>
+            </div>
+
+            <div class="content-icons">
+              <i class="far fa-comment blue"> {{ post.length }} </i>
+              <!-- <i class="fas fa-retweet green"> 865</i> -->
+              <!-- <i class="far fa-heart red">1.6k</i> -->
+              <i class="fas fa-chevron-up blue"></i>
+            </div>
+  
+          </div>
+        </div>
+        {% endfor %}
+
+
+
+        <div class="pagnation">
+          <a href="#">Load more</a>
+        </div>
+
+    </div>
+
+    
+
+    <div class="right-flex-container flex-item">
+      <div class="search-box">
+        <i class="fas fa-search"></i>
+        <input type="text" placeholder="Search TwittBuzz">
+      </div>
+
+      <div class="trends">
+        <ul>
+          <li class="nav-list header">
+            <h2>Trends for you</h2>
+            <i class="fas fa-cog">
+          </i>
+          <li class="nav-list">
+            <div class="trend-list">
+              <p class="sub-text">Trending in Naija</p>
+              <p class="main-text">#BBNaija</p>
+              <p class="sub-text">274K Tweets</p>
+            </div>
+            <div class="trend-icon">
+              <i class="fas fa-chevron-down"></i>
+            </div>
+          </li>
+          
+          <li class="nav-list"><a href="#">Show more</a></li>
+        </ul>
+      </div>
+
+      <div class="right-footer">
+        <div class="footer-links">
+          <a href="#" class="sub-text">Terms</a>
+          <a href="#" class="sub-text">Privacy policy</a>
+          <a href="#" class="sub-text">Ads info</a>
+          <a href="#" class="sub-text">more</a>
+          <i class="fas fa-chevron-down sub-text"></i>
+        </div>
+        <div class="footer-copyright">
+          <p class="sub-text">&copy; 2020 TwittBuzz, Inc.</p>
+        </div>
+
+      </div>
+    
+    </div>
+    
+  </div>
+    <script src="../static/js/jquery.min.js"></script>
+    <script src="../static/js/bootstrap.min.js"></script>  
+    <script src="../static/js/home.js"></script>
+</body>
+</html>

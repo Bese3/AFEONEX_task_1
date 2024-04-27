@@ -22,4 +22,3 @@ class Post(BaseModel, db.Model):
     body: Mapped[str] = mapped_column(String(2096), nullable=False)
     user = relationship('User', back_populates='posts')
     comments: Mapped[List['Comment']] = relationship(back_populates='post', cascade='all')
-    

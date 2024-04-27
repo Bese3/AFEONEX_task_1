@@ -6,13 +6,13 @@ from datetime import datetime
 from sqlalchemy import String, Integer
 from sqlalchemy.orm import (
                             DeclarativeBase,
-                            declarative_base,
+                            # declarative_base,
                             Mapped,
                             mapped_column
                             )
 
 
-Base = declarative_base()
+# Base = declarative_base()
 app = Flask(__name__)
 # use env variables
 app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql+mysqldb://twitt_dev:twitt_dev_pwd@localhost/twittBuzz_dev_db'

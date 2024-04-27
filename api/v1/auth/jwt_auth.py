@@ -5,7 +5,7 @@ from models import db, app
 from models.user import User
 from datetime import timedelta
 from utils.pwd_hasher import PwdHasher
-from flask_jwt_extended import create_access_token, JWTManager, jwt_required
+from flask_jwt_extended import create_access_token, JWTManager, jwt_required, get_current_user
 from flask import (
                     request,
                     make_response,
@@ -55,3 +55,13 @@ def login():
     data = {'id': user.id}
     access_token = create_access_token(identity=username, additional_claims=data)
     return make_response(jsonify({'access_token': access_token}), 200)
+
+
+@app_views.route('/auth/check/user', methods=['GET','POST'], strict_slashes=False)
+@jwt_required()
+def checker():
+    current_user = get_current_user()
+    return make_response(jsonify({'first_name': current_user.first_name,
+                                  'last_name': current_user.last_name,
+                                  'username': current_user.username,
+                                  'id': current_user.id}), 200)

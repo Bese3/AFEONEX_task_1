@@ -4,6 +4,7 @@ from api.v1.views import app_views
 from models.user import User
 from models import db, app
 from utils.pwd_hasher import PwdHasher
+from api.v1.auth.mail import MailProccesor
 from api.v1.auth.jwt_auth import jwt_required
 from flask_jwt_extended import get_current_user, create_access_token
 from flask import (
@@ -14,6 +15,9 @@ from flask import (
                   )
 
 
+private_dict={}
+
+
 @app_views.route('/user/create', methods=['POST'], strict_slashes=False)
 def create_user():
     """
@@ -21,13 +25,17 @@ def create_user():
     returns user information along with an access token.
     """
     if not request.json:
-        abort(401)
+        abort(400, 'no data')
     allowed_fields = ['first_name', 'last_name', 'username', 'email', 'password', 'phone']
     for field in allowed_fields:
         if field not in request.json:
-            abort(400)
+            abort(400, 'no sufficient data')
     data = request.get_json()
     data['password'] = PwdHasher.pwd_hash(data['password'])
+    try:
+        email_verifier = MailProccesor(recipient=data['email'])
+    except Exception as e:
+        abort(400, 'email error')
     try:
         user = User(**data)
     except Exception as e:
@@ -37,10 +45,10 @@ def create_user():
             db.session.add(user)
             db.session.commit()
         except Exception as e:
-            abort(400)
+            abort(400, 'user already exists')
         user = db.get_or_404(User, user.id)
+    private_dict['otp'] = email_verifier.send_mail()
     # redaction needed for email and password
-    # and email verification needed
     data = {'id': user.id}
     access_token = create_access_token(identity=user.username, additional_claims=data)
     return make_response(jsonify({'first_name': user.first_name,
@@ -48,7 +56,19 @@ def create_user():
                                   'username': user.username,
                                   'email': user.email,
                                   'phone': user.phone,
-                                  'access_token': access_token}), 201)
+                                  'access_token': access_token,
+                                  'id': user.id}), 201)
+
+
+def check_verification(user_input):
+    otp = private_dict.get('otp', None)
+    try:
+        otp = int(otp)
+    except Exception:
+        return False
+    if otp == int(user_input):
+        return True
+    return False
 
 
 @app_views.route('/user/update/<id>', methods=['PUT'], strict_slashes=False)
@@ -90,7 +110,8 @@ def update_user(id):
                                   'last_name': user.last_name,
                                   'username': user.username,
                                   'email': user.email,
-                                  'phone': user.phone}), 200)
+                                  'phone': user.phone,
+                                  'id': user.id}), 200)
 
 
 @app_views.route('/user/delete/<id>', methods=['DELETE'], strict_slashes=False)
@@ -110,15 +131,16 @@ def delete_user(id):
     return make_response(jsonify({'deleted': True}), 200)
 
 
-@app_views.route('/user/me', methods=['GET'], strict_slashes=False)
-@jwt_required()
-def get_me():
+@app_views.route('/user/me/<id>', methods=['GET'], strict_slashes=False)
+def get_me(id):
     try:
-        user = get_current_user()
+        with app.app_context():
+            user = db.get_or_404(User, id)
     except Exception as e:
-        return make_response(jsonify({'error': e}))
+        return make_response(jsonify({'error': e}), 500)
     return make_response(jsonify({'first_name': user.first_name,
                                   'last_name': user.last_name,
                                   'username': user.username,
                                   'email': user.email,
-                                  'phone': user.phone}), 200)
+                                  'phone': user.phone,
+                                  'id': user.id}), 200)
