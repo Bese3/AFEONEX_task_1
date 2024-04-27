@@ -135,7 +135,8 @@ def get_post(post_id):
                                   'body': post.body,
                                   'author': post.author,
                                   'comments': comments,
-                                  'publication_date': post.publication_date}), 200)
+                                  'publication_date': post.publication_date,
+                                  'id': post.id}), 200)
 
 
 @app_views.route('/post/<id>', methods=['GET'], strict_slashes=False)

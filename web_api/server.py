@@ -112,5 +112,24 @@ def get_post(post_id, id):
     return render_template('post.html', post=post, user=user, owner=owner)
 
 
+@app_view.route('/comment/<post_id>', methods=['POST'], strict_slashes=False)
+def create_comment(post_id):
+    data = request.get_json()
+    try:
+        cookies = request.cookies
+        headers = {
+            'Authorization': f"Bearer {cookies['access_token']}"
+        }
+        with requests.post(f"{uri}comment/create/{post_id}",
+                           json=data, headers=headers) as res:
+            if res.status_code == 201:
+                return jsonify({'message': True}), 200
+            else:
+                return jsonify({'message': False}), 400
+    except Exception:
+        return jsonify({'message': False}), 400
+
+
+
 if __name__ == '__main__':
     app_view.run(host="0.0.0.0", port=5001, debug=True)

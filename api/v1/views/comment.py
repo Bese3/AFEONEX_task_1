@@ -14,9 +14,9 @@ from flask import (
                   )
 
 
-@app_views.route('/comment/create/<id>/<post_id>', methods=['POST'], strict_slashes=False)
+@app_views.route('/comment/create/<post_id>', methods=['POST'], strict_slashes=False)
 @jwt_required()
-def create_comment(id, post_id):
+def create_comment(post_id):
     """
     creates a new comment associated with a specific user and post, and
     returns the comment details in JSON format.
