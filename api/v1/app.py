@@ -7,6 +7,7 @@ from models import db, app
 
 
 CORS(app, resources={r"/*": {"origins": "0.0.0.0"}})
+app.config['TIMEZONE'] = 'UTC' 
 app.register_blueprint(app_views)
 
 @app.teardown_appcontext

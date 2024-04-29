@@ -1,9 +1,11 @@
 #!/usr/bin/env python3
 
 from api.v1.views import app_views
+import redis
 from models.user import User
 from models import db, app
 from utils.pwd_hasher import PwdHasher
+from utils.memoize import Utility
 from api.v1.auth.mail import MailProccesor
 from api.v1.auth.jwt_auth import jwt_required
 from flask_jwt_extended import get_current_user, create_access_token
@@ -34,6 +36,7 @@ def create_user():
     data['password'] = PwdHasher.pwd_hash(data['password'])
     try:
         email_verifier = MailProccesor(recipient=data['email'])
+        email_verifier.send_mail()
     except Exception as e:
         abort(400, 'email error')
     try:
@@ -47,7 +50,10 @@ def create_user():
         except Exception as e:
             abort(400, 'user already exists')
         user = db.get_or_404(User, user.id)
-    private_dict['otp'] = email_verifier.send_mail()
+    key = f"auth_{user.id}"
+    otp = email_verifier.otp
+    print(otp)
+    Utility.key_setter(key, otp)
     # redaction needed for email and password
     data = {'id': user.id}
     access_token = create_access_token(identity=user.username, additional_claims=data)
@@ -58,17 +64,6 @@ def create_user():
                                   'phone': user.phone,
                                   'access_token': access_token,
                                   'id': user.id}), 201)
-
-
-def check_verification(user_input):
-    otp = private_dict.get('otp', None)
-    try:
-        otp = int(otp)
-    except Exception:
-        return False
-    if otp == int(user_input):
-        return True
-    return False
 
 
 @app_views.route('/user/update/<id>', methods=['PUT'], strict_slashes=False)

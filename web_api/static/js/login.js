@@ -1,15 +1,12 @@
 const button = document.querySelector(".btn.btn-default")
+const signUp = document.querySelector(".btn.btn-default.sign-up")
 
 button.addEventListener('click', function(event) {
     event.preventDefault(); // Prevent the button from performing its default action
-    
-    // Optional: You can add custom logic here if needed
-    console.log('Button clicked, but no action performed');
 });
 
 const uri = "http://localhost:5001/"
-const xhr = new XMLHttpRequest();
-xhr.open('GET', uri);
+
 
 function setAccessToken(token) {
     try {
@@ -32,6 +29,10 @@ function getAccessToken() {
     }
     return null; 
 }
+
+signUp.addEventListener('click', () => {
+    location.href = `${uri}auth/create-account`
+})
 
 button.addEventListener('click', async (event) => {
     const username = document.querySelector('.user-name').value;

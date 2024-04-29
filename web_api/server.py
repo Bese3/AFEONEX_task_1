@@ -55,6 +55,26 @@ def home():
     return render_template('home.html', all_posts=all_posts, user=user)
 
 
+@app_view.route('/auth/create-account', methods=['GET', "POST"], strict_slashes=False)
+def create_account():
+    user = None
+    status = 0
+    if request.method == 'GET':
+        return render_template('register.html')
+    elif request.method == 'POST':
+        data = request.get_json()
+        try:
+            with requests.post(f'{uri}user/create', json=data) as res:
+                if res.status_code == 201:
+                    user = res.json()
+                    # return redirect(url_for('verify_email'))
+                status = res.status_code
+        except Exception:
+            return jsonify({}), status
+        return make_response(jsonify(user), 200)
+    # elif request.method == 'PUT':
+
+
 @app_view.route('/auth/login', methods=['GET', 'POST'], strict_slashes=False)
 def login():
     if request.method == 'GET':
@@ -101,7 +121,6 @@ def get_post(post_id, id):
             if res.status_code == 200:
                 owner = res.json()
             else:
-                print(res.status_code)
                 return redirect(url_for('login'))
     except Exception as e:
         # print(e)
@@ -109,7 +128,36 @@ def get_post(post_id, id):
     date = datetime.strptime(post['publication_date'], "%Y-%m-%d %H:%M:%S.%f")
     post['publication_date'] = Utility.format_datetime_ago(date)
     post['length'] = len(post['comments'])
+    i = 0
+    for comment in post['comments']:
+        com_date = datetime.strptime(comment['comment_date'], "%Y-%m-%d %H:%M:%S.%f")
+        post['comments'][i]['comment_date'] = Utility.format_datetime_ago(com_date)
+        with requests.get(f"{uri}user/me/{comment['commenter_id']}") as res:
+            if res.status_code == 200:
+                res = res.json()
+                post['comments'][i]['commenter'] = f"{res['first_name']} {res['last_name']}"
+                post['comments'][i]['username'] = res['username']
+        i += 1
     return render_template('post.html', post=post, user=user, owner=owner)
+
+
+@app_view.route('/post/<id>', methods=['POST'], strict_slashes=False)
+def post(id):
+    data = request.get_json()
+    post = None
+    try:
+        cookies = request.cookies
+        headers = {
+            'Authorization': f"Bearer {cookies['access_token']}"
+        }
+        with requests.post(f'{uri}/post/create/{id}',
+                           json=data, headers=headers) as res:
+            if res.status_code == 201:
+                post = res.json()
+    except Exception:
+        return jsonify({}), 401    
+    return make_response(jsonify(post), 200)
+
 
 
 @app_view.route('/comment/<post_id>', methods=['POST'], strict_slashes=False)
@@ -128,6 +176,19 @@ def create_comment(post_id):
                 return jsonify({'message': False}), 400
     except Exception:
         return jsonify({'message': False}), 400
+
+
+@app_view.route('/auth/verify-email', methods=['GET', 'POST'], strict_slashes=False)
+def verify_email():
+    if request.method == 'GET':
+        return render_template('verify.html')
+    if request.method == "POST":
+        data = request.get_json()
+        if Utility.verify_user(data['id'], data['otp']):
+            return make_response(jsonify({'message': True}), 200)
+        return make_response(jsonify({'message': False}), 200)
+
+
 
 
 

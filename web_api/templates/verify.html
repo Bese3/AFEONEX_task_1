@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>TwittBuzz - TwittBuzz helps you connect and share with the people in your life.</title>
+    <link href="{{ url_for('static', filename='css/bootstrap.min.css')}}" rel="stylesheet">
+    <link href="{{ url_for('static', filename='css/awesome-bootstrap-checkbox.min.css') }}" rel="stylesheet">
+    <link href="{{ url_for('static', filename='css/font-awesome.min.css') }}" rel="stylesheet">
+    <link href="{{ url_for('static', filename='css/login.css')}}" rel="stylesheet">
+  </head>
+  <body>
+  <!-- <span class="header-ribbon"/> -->
+  <div class="container-fluid">
+    <div class="row">
+        <div class="col-md-4 col-md-offset-4 col-centered">
+            <div class="login-panel">
+                <h4 class="login-panel-title">TwittBuzz</h4>
+                <p class="login-panel-tagline">TwittBuzz helps you connect and share with the people in your life.</p>
+                <div class="login-panel-section">
+                    <!-- <form action=""> -->
+                    <div class="form-group">
+                        <div class="input-group margin-bottom-sm">
+                            <span class="input-group-addon"><i class="fa fa-envelope-o fa-user fa-fw" aria-hidden="true"></i></span>
+                            <input class="form-control otp" type="text" placeholder="Enter OTP Valid only for 10min" required>
+                        </div>
+                    </div>
+                    <!-- <div class="checkbox checkbox-circle checkbox-success checkbox-small">
+                        <input type="checkbox" id="checkbox1">
+                        <label for="checkbox1">Keep me logged in</label>
+                        <a href="#" class="pull-right">Forget your password?</a>
+                    </div> -->
+                </div>
+                <div class="login-panel-section">
+                    <button type="submit" class="btn btn-default"><i class="fa fa-sign-in fa-fw" aria-hidden="true"></i>Send</button>
+                </div>
+            <!-- </form> -->
+            </div>
+        </div>
+      </div>
+    </div>
+    <script src="{{ url_for('static', filename='js/jquery.min.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/bootstrap.min.js')}} "></script>
+    <script src="{{ url_for('static', filename='js/verify.js')}} "></script>
+  </body>
+</html>

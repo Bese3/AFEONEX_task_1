@@ -20,9 +20,9 @@ app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql+mysqldb://twitt_dev:twitt_dev_pwd
 
 class BaseModel(DeclarativeBase):
     id: Mapped[str] = mapped_column(String(60), default=lambda: str(uuid4()), primary_key=True)
-    created_at: Mapped[str] = mapped_column(String(60), default=lambda: (datetime.utcnow()))
+    created_at: Mapped[str] = mapped_column(String(60), default=datetime.now)
     updated_at: Mapped[str] = mapped_column(String(60),
-                                            default=lambda: (datetime.utcnow()), onupdate=lambda: (datetime.utcnow()))
+                                            default=datetime.now, onupdate=datetime.now)
 
 db = SQLAlchemy(model_class=BaseModel)
 db.init_app(app)

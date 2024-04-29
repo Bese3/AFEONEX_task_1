@@ -1,4 +1,12 @@
 const uri = "http://localhost:5001/";
+const postBtn = document.querySelector('.btn.post')
+
+
+
+document.querySelector('button').addEventListener('click', () => {
+    event.preventDefault()
+})
+
 
 
 function setAccessToken(token) {
@@ -51,6 +59,32 @@ post.forEach((elem, indx) => {
         window.location.href = `${uri}post/${postId}/${userId}`;
     
     })
+});
+
+
+postBtn.addEventListener('click', async () => {
+    const input = document.getElementById('post-data');
+    if (input.value == '') {
+        return
+    }
+    const user = document.querySelector('.profile-link')
+    const userId = user.getAttribute('user-id')
+    if (userId == ''){
+        location.href = `${uri}auth/login`;
+    }
+    jsonData = {
+        'body': input.value
+    }
+    const requestOptions = {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(jsonData)
+    }
+    await fetch(`${uri}post/${userId}`, requestOptions)
+    location.reload();
+
 })
 
 

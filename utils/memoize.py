@@ -3,20 +3,13 @@ from functools import wraps
 import requests
 from datetime import datetime
 import jwt
-from datetime import datetime, timedelta
-import random
+from datetime import datetime
+import random, redis
 
-secret_key = 'my secret'
+# secret_key = 'my secret'
 
+r = redis.Redis(host='localhost', port=6379, db=0)
 
-admin_user = {
-    'first_name': 'admin',
-    'last_name': 'admin',
-    "email": "admin@gmail.com",
-    "password": "pass123",
-    "username": "admin",
-    "phone": "0912452317"
-}
 
 def memoize(fn):
     attr_name = 'data'
@@ -46,9 +39,9 @@ class Utility:
     def format_datetime_ago(post_datetime):
         current_datetime = datetime.now()
         time_difference = current_datetime - post_datetime
-
         # Calculate the difference in seconds
         seconds_difference = time_difference.total_seconds()
+        # print(f"{time_difference} = {current_datetime} - {post_datetime}")
 
         # Define time intervals in seconds
         intervals = {
@@ -69,26 +62,40 @@ class Utility:
         # If the post is less than a minute old
         return "Just now"
 
-
-class reqstAdmin:
-    @memoize
-    def get_admin(self):
-        return requests.post('http://localhost/api/v1/user/create', json=admin_user).json()
+    @staticmethod
+    def key_setter(key, value, time=600):
+        if key is None or value is None:
+            raise ValueError('key or value is None')
+        r.setex(key, time, value)
+        return True
 
     @staticmethod
-    def is_token_valid(token):
+    def value_getter(key):
+        if key is None:
+            raise ValueError('key is None')
+        return r.get(key)
+
+    @staticmethod
+    def verify_user(id, user_input):
+        key = f'auth_{id}'
         try:
-            payload = jwt.decode(token, secret_key, algorithms=['HS256'])
-            # Check expiration
-            if 'exp' in payload:
-                current_time = datetime.utcnow()
-                if current_time > datetime.utcfromtimestamp(payload['exp']):
-                    return False  # Token has expired
-            # Signature verification (optional but recommended)
-            # jwt.decode() will raise an exception if the signature is invalid
-            jwt.decode(token, secret_key, algorithms=['HS256'])
-            return True  # Token is valid
-        except jwt.ExpiredSignatureError:
-            return False  # Token has expired
-        except jwt.InvalidTokenError:
-            return False 
+            value = Utility.value_getter(key)
+            print(f'value = {value}, user_input = {user_input}')
+            if int(value) == int(user_input):
+                return True
+        except ValueError:
+            return False
+        return False
+
+class reqstAdmin:
+    admin_user = {
+    'first_name': 'admin',
+    'last_name': 'admin',
+    "email": "admin@gmail.com",
+    "password": "pass123",
+    "username": "admin",
+    "phone": "0912452317"
+}
+    @memoize
+    def get_admin(self):
+        return requests.post('http://localhost/api/v1/user/create', json=self.admin_user).json()

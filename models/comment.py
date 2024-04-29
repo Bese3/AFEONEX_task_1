@@ -15,7 +15,7 @@ class Comment(BaseModel, db.Model):
     user_id: Mapped[str] = mapped_column(String(60), ForeignKey('users.id'), nullable=False)
     post_id: Mapped[str] = mapped_column(String(60), ForeignKey('posts.id'), nullable=False)
     message: Mapped[str] = mapped_column(String(1048), nullable=False)
-    comment_date: Mapped[str] = mapped_column(String(60),
-                                                  default=str(datetime.utcnow()), onupdate=str(datetime.utcnow()))
+    # comment_date: Mapped[str] = mapped_column(String(60),
+    #                                               default=str(datetime.utcnow()), onupdate=str(datetime.utcnow()))
     post = relationship('Post', back_populates='comments')
     commenter_id: Mapped[str] = mapped_column(String(60), nullable=False)

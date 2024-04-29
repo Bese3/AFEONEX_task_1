@@ -25,7 +25,7 @@ def create_post(id):
         abort(401)
     if not request.json:
         abort(400)
-    allowed_fields = ['title', 'body']
+    allowed_fields = ['body']
     for field in allowed_fields:
         if field not in request.json:
             abort(400)
@@ -67,7 +67,7 @@ def update_post(id, post_id):
         abort(401)
     if not request.json:
         abort(404)
-    allowed_fields = ['title', 'body', 'author']
+    allowed_fields = ['body', 'author']
     for field in request.json:
         if field not in allowed_fields:
             abort(404)
@@ -88,7 +88,7 @@ def update_post(id, post_id):
         comments = [
                     {
                         'message': c.message, 
-                        'comment_date': c.comment_date,
+                        'comment_date': c.updated_at,
                         'commenter_id': c.commenter_id, 
                         'post_id': c.post_id} for c in all_comments]
 
@@ -96,7 +96,7 @@ def update_post(id, post_id):
                                   'body': post.body,
                                   'author': post.author,
                                   'comments': comments,
-                                  'publication_date': post.publication_date,
+                                  'publication_date': post.updated_at,
                                   'id': post.id}), 200)
 
 
@@ -127,15 +127,16 @@ def get_post(post_id):
         comments = [
                     {
                         'message': c.message, 
-                        'comment_date': c.comment_date,
+                        'comment_date': c.updated_at,
                         'commenter_id': c.commenter_id, 
                         'post_id': c.post_id} for c in all_comments]
+        # print(post.publication_date)
 
     return make_response(jsonify({'title': post.title,
                                   'body': post.body,
                                   'author': post.author,
                                   'comments': comments,
-                                  'publication_date': post.publication_date,
+                                  'publication_date': post.updated_at,
                                   'id': post.id}), 200)
 
 
@@ -151,14 +152,14 @@ def get_all_user_posts(id):
         for post in all_posts:
             comments = [{
                             'message': c.message, 
-                            'comment_date': c.comment_date,
+                            'comment_date': c.updated_at,
                             'commenter_id': c.commenter_id, 
                             'post_id': c.post_id} for c in post.comments]
             post_dict = {'title': post.title,
                                   'body': post.body,
                                   'author': post.author,
                                   'comments': comments,
-                                  'publication_date': post.publication_date,
+                                  'publication_date': post.updated_at,
                                   'id': post.id}
             
             all_posts[i] = post_dict
@@ -176,14 +177,14 @@ def get_all_posts():
         for post in all_posts:
             comments = [{
                             'message': c.message, 
-                            'comment_date': c.comment_date,
+                            'comment_date': c.updated_at,
                             'commenter_id': c.commenter_id, 
                             'post_id': c.post_id} for c in post.comments]
             post_dict = {'title': post.title,
                                   'body': post.body,
                                   'author': post.author,
                                   'comments': comments,
-                                  'publication_date': post.publication_date,
+                                  'publication_date': post.updated_at,
                                   'id': post.id,
                                   'user_id': post.user_id}
             

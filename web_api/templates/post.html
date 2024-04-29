@@ -40,7 +40,7 @@
 
       
       <!-- User Content -->
-        <div class="tweets" id="{{ post.id }}">
+        <div class="tweets" id="{{ post.id }}" user-id=" {{ owner.id }} ">
           <div class="user-pics"></div>
           <div class="user-content-box">
             <div class="user-names">
@@ -68,7 +68,7 @@
                   <div class="form-group-2">
                     <div class="post-icons">
                     </div>
-                    <button class="btn btn-default" type="submit">Comment</button>
+                    <button class="btn btn-default">Comment</button>
                   </div>
                 </form>
         
@@ -79,13 +79,19 @@
             <div class="user-comment" id="{{ comment.id }}">
                 <div class="user-content-box">
                     <div class="user-names">
-                          <!-- <hi class="full-name">Olivia Brent</hi> -->
-                          <!-- <p class="user-name">@iamolivia</p> -->
-                          <!-- <p class="time"> . 58mins</p> -->
+                          <hi class="full-name"> {{ comment.commenter }} </hi>
+                          <p class="user-name">@{{ comment.username }} </p>
+                          <p class="time"> {{ comment.comment_date }} </p>
                     </div>
                     <div class="user-content">
                         <p> {{ comment.message }} </p>
                     </div>
+                    {% if comment.commenter_id == user.id %}
+                    <div class="crud">
+                      <button class="btn btn-default edit" id="{{ comment.id }}">Edit</button>
+                      <button class="btn btn-default delete">Delete</button>
+                    </div>
+                    {% endif %}
                 </div>
   
              </div>
