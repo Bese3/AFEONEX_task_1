@@ -36,6 +36,7 @@ A simple blog post platform that can create users to create, update or delete a 
 
 #### Post
 ```/api/v1/post/create/<user_id>``` Creates post based on user_id using neccassary fields
+
 ```/api/vi/post/update/<user_id>/<post_id>``` Update post
 
 ```/api/v1/post/delete/<user_id>/<post_id>``` Delete post
