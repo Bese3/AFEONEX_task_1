@@ -13,7 +13,7 @@ A simple blog post platform that can create users to create, update or delete a 
 + bcrypt
 + MySQLDB
 + SQLAlchemy
-+ use the [!Requirment.txt](https://github.com/Bese3/AFEONEX_task_1/blob/main/requirment.txt)
++ use the [Requirment.txt](https://github.com/Bese3/AFEONEX_task_1/blob/main/requirment.txt)
 
 ## Application
 
@@ -54,3 +54,35 @@ A simple blog post platform that can create users to create, update or delete a 
 
 ```/api/v1/comment/delete/<user_id>/<comment_id>``` Delete comment of the user
 
+
+## Installation
+
+After cloning this repository navigate into the root of the project repository and run:
+```
+$python3 venv your_virtual_env_name
+$source your_virtual_env_name/bin/activate
+$pip3 install -r requirment..txt
+```
+
+## Usage
+
+In order to use the project we have to run the servers, and mysql database
++ note that the below step is only to be executed once to create database and relational tables in mysql
+```
+$cat set_up_mysql_dev.sql | mysql
+$python3 setup_models.py
+```
+
+Run servers
+```
+$python3 -m api.v1.app
+```
+on another terminal
+```
+$python3 -m web_api.server
+```
+
+then run on your browser
+```
+http://localhost:5001/
+```
