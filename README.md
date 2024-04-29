@@ -13,6 +13,7 @@ A simple blog post platform that can create users to create, update or delete a 
 + bcrypt
 + MySQLDB
 + SQLAlchemy
++ use the [!Requirment.txt](https://github.com/Bese3/AFEONEX_task_1/blob/main/requirment.txt)
 
 ## Application
 
