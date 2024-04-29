@@ -17,3 +17,10 @@ A simple blog post platform that can create users to create, update or delete a 
 ## Application
 
 + Python3/Flask
+
+
+## API
+### First Level
+
+```/api/v1/user/create``` Create user using neccassary fields
+
