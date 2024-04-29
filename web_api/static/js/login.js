@@ -31,7 +31,7 @@ function getAccessToken() {
 }
 
 signUp.addEventListener('click', () => {
-    location.href = `${uri}auth/create-account`
+    location.href = `${uri}auth/create-account  `
 })
 
 button.addEventListener('click', async (event) => {
@@ -48,25 +48,18 @@ button.addEventListener('click', async (event) => {
         },
         body: JSON.stringify(jsonData)
     }
-    fetch(`${uri}auth/login`, requestOptions)
+    await fetch(`${uri}auth/login`, requestOptions)
     .then(res =>  {
-        console.log(res.ok)
         if (res.ok) {
-            return res.json(); // Parse the JSON response
+            return res.json();
         } else {
-            throw new Error('Login failed'); // Throw an error for non-200 response
+            document.querySelector('p.warning').textContent = "";
+            document.querySelector('p.warning').append('Username or password doesnt match');
+            // location.reload();
         }
     })
     .then((data) => {
-        // Store the access token in localStorage
         setAccessToken(data.token);
-        // Redirect to the home page
-        
         window.location.href = '/';
     })
-    .catch(error => {
-        console.error('Login error:', error);
-        // Redirect to the login page if login fails
-        window.location.href = `/auth/login`;
-    });
 });

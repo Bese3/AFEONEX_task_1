@@ -68,7 +68,9 @@ def create_account():
                 if res.status_code == 201:
                     user = res.json()
                     # return redirect(url_for('verify_email'))
-                status = res.status_code
+                else:
+                    status = res.status_code
+                    return jsonify({}), status
         except Exception:
             return jsonify({}), status
         return make_response(jsonify(user), 200)

@@ -5,10 +5,10 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>TwittBuzz - TwittBuzz helps you connect and share with the people in your life.</title>
-    <link href="../static/css/bootstrap.min.css" rel="stylesheet">
-    <link href="../static/css/awesome-bootstrap-checkbox.min.css" rel="stylesheet">
-    <link href="../static/css/font-awesome.min.css" rel="stylesheet">
-    <link href="../static/css/login.css" rel="stylesheet">
+    <link href="{{ url_for('static', filename='css/bootstrap.min.css') }}" rel="stylesheet">
+    <link href="{{ url_for('static', filename='css/awesome-bootstrap-checkbox.min.css') }}" rel="stylesheet">
+    <link href="{{url_for('static', filename='css/font-awesome.min.css')}}" rel="stylesheet">
+    <link href="{{url_for('static', filename='css/login.css')}}" rel="stylesheet">
   </head>
   <body>
   <!-- <span class="header-ribbon"/> -->
@@ -37,9 +37,10 @@
                             <label for="checkbox1">Keep me logged in</label>
                             <a href="#" class="pull-right">Forget your password?</a>
                         </div>
+                        <p style="color: rgb(238, 24, 24);" class="warning"></p>
                     </div>
                     <div class="login-panel-section">
-                        <button class="btn btn-default"><i class="fa fa-sign-in fa-fw" aria-hidden="true"></i> Login</button> | <a href="#">Create Your Account</a>   <button class="btn btn-default sign-up"><i class="fa fa-sign-in fa-fw" aria-hidden="true"></i>Sign Uo</button> 
+                        <button class="btn btn-default"><i class="fa fa-sign-in fa-fw" aria-hidden="true"></i> Login</button> | <a href="#">Create Your Account</a>   <button class="btn btn-default sign-up"><i class="fa fa-sign-in fa-fw" aria-hidden="true"></i>Sign Up</button> 
                     </div>
                 </div>
             </form>

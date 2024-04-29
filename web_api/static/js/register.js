@@ -62,10 +62,13 @@ register.addEventListener('click', async () => {
     await fetch(`${uri}/auth/create-account`, requestOptions)
     .then(async (res) => {
         // console(document.querySelector('p.warning'))
-        if (res.status == 200){
+        if (res.ok){
             const data = await res.json()
             // console.log(data)
             location.href = `${uri}auth/verify-email?id=${data.id}`;
+        } else {
+            document.querySelector('p.warning').textContent = '';
+            document.querySelector('p.warning').append('Username, email or phone is already registered')
         }
 
     })
